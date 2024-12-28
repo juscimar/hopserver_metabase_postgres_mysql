@@ -65,8 +65,8 @@ Este projeto configura um ambiente integrado com diversas ferramentas úteis par
 
 ### 1. Clone o Repositório
 ```bash
-git clone https://github.com/seu-usuario/seu-projeto.git
-cd seu-projeto
+git clone https://github.com/juscimar/hopserver_metabase_postgres_mysql.git
+cd hopserver_metabase_postgres_mysql/
 ```
 
 ### 2. Configure Variáveis de Ambiente
