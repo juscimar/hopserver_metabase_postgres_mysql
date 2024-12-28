@@ -2,7 +2,7 @@
 
 ![Docker](https://img.shields.io/badge/Docker-Compose-blue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.15-blue)
-![Metabase](https://img.shields.io/badge/Metabase-0.51.10-yellow)
+![Metabase](https://img.shields.io/badge/Metabase-0.52.4-yellow)
 ![PgAdmin](https://img.shields.io/badge/PgAdmin-8.14.0-orange)
 ![Apache Hop](https://img.shields.io/badge/Apache_Hop-2.11.0-green)
 ![MySQL](https://img.shields.io/badge/MySQL-9.1.0-red)
