@@ -66,6 +66,8 @@ Este projeto configura um ambiente integrado com diversas ferramentas úteis par
 ### 1. Clone o Repositório
 ```bash
 git clone https://github.com/juscimar/hopserver_metabase_postgres_mysql.git
+```
+```bash
 cd hopserver_metabase_postgres_mysql/
 ```
 
