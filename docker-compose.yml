@@ -1,0 +1,130 @@
+services:
+  #Serviço de  banco de dados postgres
+  postgres:
+    container_name: Postgres
+    image: postgres:14.15-alpine3.21
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_teste:/var/lib/postgresql/data
+      - ./utils/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+    networks:
+      - hopserver_network
+
+
+  # Serviço Metabase
+  metabase:
+    image: metabase/metabase:latest
+    container_name: Metabase
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${POSTGRES_METABASE_DB}
+      MB_DB_PORT: ${POSTGRES_METABASE_PORT}
+      MB_DB_USER: ${POSTGRES_METABASE_USER}
+      MB_DB_PASS: ${POSTGRES_METABASE_PASSWORD}
+      MB_DB_HOST: ${POSTGRES_METABASE_HOST}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    networks:
+      - hopserver_network
+
+
+  # Serviço PgAdmin
+  pgadmin:
+    image: dpage/pgadmin4:8.14.0
+    container_name: PgAdmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - pgadmin_data_teste:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - hopserver_network
+
+
+  #serviço do ApacheHopServer
+  hopserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: HopServer
+    environment:
+      - HOP_OPTIONS=${HOP_OPTIONS}
+      - HOP_LOG_LEVEL=${HOP_LOG_LEVEL}
+      - HOP_SERVER_USER=${HOP_SERVER_USER}
+      - HOP_SERVER_PASS=${HOP_SERVER_PASS}
+      - HOP_SERVER_HOSTNAME=${HOP_SERVER_HOSTNAME}
+    volumes:
+      - ./utils:/files
+      - hopserver_data_teste:/usr/local/tomcat/webapps/ROOT/config
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - metabase
+    env_file:
+      - .env  # Importando o arquivo .env para as variáveis de ambiente
+    networks:
+      - hopserver_network
+
+
+  # Serviço do MySql
+  mysql:
+    container_name: MySql
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data_teste:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    depends_on:
+      - postgres
+      - metabase
+      - hopserver
+    env_file:
+      - .env  # Importando o arquivo .env para as variáveis de ambiente
+
+    networks:
+      - hopserver_network
+
+
+  # Serviço do PgAdmin
+  phpmyadmin:
+    container_name: PhpMyAdmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: ${MYSQL_HOST}
+      PMA_PORT: ${MYSQL_PORT}
+      UPLOAD_LIMIT: 300M
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    ports:
+      - 8000:80
+    links:
+      - mysql:mysql
+    networks:
+      - hopserver_network
+
+
+# Volumes
+volumes:
+  postgres_data_hop:
+  mysql_data_hop:
+  pgadmin_data_hop:
+  hopserver_data_hop:
+
+#Redes
+networks:
+  hopserver_network:
+    driver: bridge
