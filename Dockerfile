@@ -16,3 +16,4 @@ COPY ./utils/mysql-connector-j-8.4.0.jar /usr/local/tomcat/lib/
 
 # # Comando padrão para iniciar o servidor Apache Hop
 # CMD ["catalina.sh", "run"]
+
