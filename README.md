@@ -147,7 +147,7 @@ docker-compose up -d
 - Volume de configuração montado em `/usr/local/tomcat/webapps/ROOT/config`.
 
 ### **Metabase**
-- Configuração do banco de dados em `./utils`.
+- Criação do banco de dados metabase em `./utils/create-db.sql`.
 
 ### **PostgreSQL**
 - Arquivos de inicialização no diretório `./utils/create-db.sql`.
